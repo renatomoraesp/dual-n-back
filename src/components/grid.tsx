@@ -20,6 +20,11 @@ const Grid: React.FC<GridProps> = ({ name }) => {
   const hasLetterRepeated: Array<number> = [];
   const numberOfSteps: number = 6;
 
+  let numberOfPositionMatches: number = 0;
+  let positionsGottenRight: number = 0;
+  let numberOfLetterMatches: number = 0;
+  let lettersGottenRight: number = 0;
+
   const pushGridRef = (el: HTMLDivElement) => {
     gridRefs.current.push(el);
   }
@@ -41,9 +46,10 @@ const Grid: React.FC<GridProps> = ({ name }) => {
     letter.play();
   }
 
-  const testForAudioRepetition = () => {
+  const testForLetterRepetition = () => {
     if (haveBeenSaid[0] === haveBeenSaid[numberOfSteps]) {
       hasLetterRepeated.push(1);
+      numberOfLetterMatches++;
     }
     else {
       hasLetterRepeated.push(0);
@@ -72,6 +78,7 @@ const Grid: React.FC<GridProps> = ({ name }) => {
   const testForGridRepetition = () => {
     if (haveBeenColored[0] === haveBeenColored[numberOfSteps]) {
       hasGridRepeated.push(1);
+      numberOfPositionMatches++;
     }
     else {
       hasGridRepeated.push(0); 
@@ -104,11 +111,9 @@ const Grid: React.FC<GridProps> = ({ name }) => {
       colorGridItem();
       testForGridRepetition();
       playAudio();
-      testForAudioRepetition();
+      testForLetterRepetition();
 
-      console.log('have been colored:\n' + haveBeenColored);
       console.log('has the grid repeated?\n' + hasGridRepeated);
-      console.log('have been said:\n' + haveBeenSaid);
       console.log('has the letter repeated?\n' + hasLetterRepeated);
     }, 2000);
   }
@@ -130,6 +135,12 @@ const Grid: React.FC<GridProps> = ({ name }) => {
         hasGridRepeated.length = 0;
         haveBeenSaid.length = 0;
         hasLetterRepeated.length = 0;
+        
+        numberOfPositionMatches = 0;
+        positionsGottenRight = 0;
+        numberOfLetterMatches = 0;
+        lettersGottenRight = 0;
+        
         isTheTaskBeingPlayed--;
       }
 
@@ -138,6 +149,7 @@ const Grid: React.FC<GridProps> = ({ name }) => {
           if (hasGridRepeated[hasGridRepeated.length - 1] === 1) {
             colorMatchHeading(0, 'green', 800);
             hasGridRepeated[hasGridRepeated.length - 1] = 0;
+            positionsGottenRight++;
           }
           else {
             colorMatchHeading(0, 'red', 800);
@@ -153,6 +165,7 @@ const Grid: React.FC<GridProps> = ({ name }) => {
           if (hasLetterRepeated[hasLetterRepeated.length - 1] === 1) {
             colorMatchHeading(1, 'green', 800);
             hasLetterRepeated[hasLetterRepeated.length - 1] = 0;
+            lettersGottenRight++;
           }
           else {
             colorMatchHeading(1, 'red', 800);
@@ -180,8 +193,7 @@ const Grid: React.FC<GridProps> = ({ name }) => {
 
     const styleForLeftContainer: CSS.Properties = {
         width: '28vw',
-        height: '100vh',
-        backgroundColor: 'red'
+        height: '100vh'
     }
 
     const styleForMiddleContainer: CSS.Properties = {
@@ -194,7 +206,7 @@ const Grid: React.FC<GridProps> = ({ name }) => {
     const styleForRightContainer: CSS.Properties = {
         width: '28vw',
         height: '100vh',
-        backgroundColor: 'blue'
+        fontSize: '3vh'
     }
 
     const styleForGridContainer: CSS.Properties = {
@@ -237,7 +249,21 @@ const Grid: React.FC<GridProps> = ({ name }) => {
           </div>
           
           <div style={ styleForRightContainer }>
-            <h1>Some content on the right</h1>
+            <div style={ { paddingTop: '5vh' } }>
+              <label>Step size: </label>
+              <select>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+              </select>
+            </div>
           </div>
         </div>
     );
